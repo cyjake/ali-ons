@@ -15,7 +15,8 @@ jobs:
           - 9876:9876
         options: >-
           --name rocketmq-namesrv
-          --detach
+          --network rocketmq
+          sh mqnamesrv
 
       rocketmq-broker:
         image: apache/rocketmq:4.9.4
@@ -23,9 +24,10 @@ jobs:
           - 10911:10911
         options: >-
           --name rocketmq-broker
-          --detach
+          --network rocketmq
           --link rocketmq-namesrv:namesrv
-          --env "NAMESRV_ADDR=localhost:9876"
+          --env "NAMESRV_ADDR=namesrv:9876"
+          sh mqbroker --enable-proxy
 
     environment: 'ci'
     strategy:
